@@ -65,6 +65,16 @@ def format_filename(pattern, add_extension=True, lowercase=True, nonwordchars=Fa
     Usage:
         thumbnail = models.ImageField(upload_to=format_filename('profile_images/{last_name}_{first_name}'))
     """
+
+    #
+    # Django 1.7 migrations will not serialize this method.
+    # This hides it from the migrations.
+    # Taken from https://code.djangoproject.com/ticket/22436#comment:15
+    #
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] in ('makemigrations', 'migrate'):
+        return None # Hide ourselves from Django migrations
+
     def upload_to(self, old_filename):
         __filename, __ext = os.path.splitext(
                 os.path.basename(old_filename))
